@@ -1,0 +1,18 @@
+---
+- name: Subscribe host
+  hosts: localhost
+  vars_files:
+  - ../vars.yml
+  tasks:
+  - import_role:
+      name: prepareHost 
+      tasks_from: subscribe.yml
+
+- name: Configure host
+  hosts: localhost
+  vars_files:
+  - ../vars.yml
+  tasks:
+  - import_role:
+      name: prepareHost
+      tasks_from: configureHost.yml

@@ -1,0 +1,7 @@
+---
+- import_tasks: subscribeHost.yml
+  vars:
+    username: "{{ rhn_username }}"
+    password: "{{ rhn_password }}"
+    poolID: "{{ openstack_pool_id }}"
+

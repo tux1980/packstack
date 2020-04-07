@@ -1,0 +1,30 @@
+---
+- name: Subscribe System
+  redhat_subscription:
+    state: present
+    username: "{{ username }}"
+    password: "{{ password }}"
+    pool_ids: "{{ poolID }}"
+
+- name: Disable all active repositories
+  rhsm_repository:
+    name: '*'
+    state: disabled  
+
+- name: Enable OpenStack repositories
+  rhsm_repository:
+    name:
+      - rhel-8-for-x86_64-baseos-rpms
+      - rhel-8-for-x86_64-appstream-rpms
+      - rhel-8-for-x86_64-highavailability-rpms
+      - fast-datapath-for-rhel-8-x86_64-rpms
+      - advanced-virt-for-rhel-8-x86_64-rpms
+      - openstack-15-for-rhel-8-x86_64-rpms
+      - openstack-15-tools-for-rhel-8-x86_64-rpms
+      - openstack-15-devtools-for-rhel-8-x86_64-rpms
+    state: enabled
+
+- name: Install packtstack
+  yum:
+    name: openstack-packstack
+    state: present

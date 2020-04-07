@@ -1,0 +1,66 @@
+---
+- name: stop and disable firewalld
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: false
+
+- name: install the latest network-scripts
+  dnf:
+    name: network-scripts
+    state: latest
+
+- name: disable deprecation warnings
+  file:
+    path: /etc/sysconfig/disable-deprecation-warnings
+    state: touch
+    mode: u=rw,g=r,o=r
+
+- name: stop and disable NetworkManager
+  systemd:
+    name: NetworkManager
+    state: stopped
+    enabled: false
+
+- name: enable and start network
+  systemd:
+    name: network
+    state: started
+    enabled: yes
+
+- name: disable standard virt rhel 
+  dnf:
+    name: "@virt:rhel"
+    state: absent
+
+- name: enable virt rhel 8
+  dnf:
+    name: "@virt:8.0.0"
+    state: installed
+
+- name: install dnf-utils
+  dnf:
+    name: dnf-utils
+    state: installed
+
+- name: update all packages
+  dnf:
+    name: "*"
+    state: latest   
+
+- name: configure Intel Virtualization for Directed I/O
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX="'
+    insertbefore: '^biosdevname=0'
+    line: 'intel_iommu=on ' 
+
+- name: Disable SELinux
+  selinux:
+    state: permissive
+
+- name: disable selinux in file
+  lineinfile:
+    path: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: SELINUX=permissive
